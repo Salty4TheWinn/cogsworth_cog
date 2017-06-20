@@ -40,25 +40,25 @@ class anothercog:
                             cnt = 0
                             while cnt < ch_count:
                                 champname = re.findall(r'(?<=CHAMPION\.)\w+',champline)
-                                tochamp = [champname[cnt],effect.group(0),stars.group(1),stars.group(2)]
+                                tochamp = [champname[cnt].lower(),effect.group(0).lower(),stars.group(1),stars.group(2)]
                                 synrows.update({"{}".format(i) : tochamp})
                                 cnt += 1
                                 i += 1
                         else:
                             champname = re.search(r'(?<=CHAMPION\.)(\w+)',champline)
-                            tochamp = [champname.group(0),effect.group(0),stars.group(1),stars.group(2)]
+                            tochamp = [champname.group(0).lower(),effect.group(0).lower(),stars.group(1),stars.group(2)]
                             synrows.update({"{}".format(i) : tochamp}) #set contains of synergy row
                             i += 1
                     elif pattern_fromchamp.search(champline): #if the line contains "CHAMPION.#####"
                         frmchamp = champline.strip()
                         fchamp = re.search(r'(?<=CHAMPION\.)(\w+)',frmchamp)
-                        fromchamp = fchamp.group(0)
+                        fromchamp = fchamp.group(0).lower()
                         ch_dict.update({fromchamp : [synrows]}) #set contents of champion block with champ name and syn rows
                 c_all.update(ch_dict) #append all champion blocks to final output dictionary
             if find_start > 0:
                 try:
                     text_file = open("data/Synergies.json", "w")
-                    str_all = str(c_all).replace('\'',"\"") #convert to string. alnd json doesn't like single quotes
+                    str_all = str(c_all).replace('\'',"\"").replace("drvoodoo","brothervoodoo") #convert to string. alnd json doesn't like single quotes
                     text_file.write(str_all) #overwrites existing content
                     text_file.close()
                     await self.bot.send_file(ctx.message.channel,"data/Synergies.json")
